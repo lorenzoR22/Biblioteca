@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="es">
+    <meta charset="UTF-8">
+    <title>Registrarse</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<h1>Registrar autor</h1>
+    <hr>
+<form  th:action="@{/addAutor}"  method="post" th:object="${Autor}">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" th:field="*{nombre}" class="form-control mb-4 col-4" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" th:field="*{apellido}" class="form-control mb-4 col-4" required>
+
+        <label for="genero">Genero:</label>
+        <input type="text" id="genero" name="genero" th:field="*{genero}" class="form-control mb-4 col-4" required>
+    <button type="submit" class="btn btn-info col-2">Registrar</button>
+</form>
+</div>
+</body>
+</html>

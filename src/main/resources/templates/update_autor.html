@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar autor</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-lg">
+    <h1>Actualizar autor</h1>
+    <hr>
+    <form class="w-50" th:action="@{/updateAutor}" th:object="${autor}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <label for="nombre" class="col-form-label">Nombre:</label>
+        <input type="text" id="nombre" th:field="*{nombre}" class="form-control">
+
+        <label for="apellido" class="col-form-label">Apellido:</label>
+        <input type="text" id="apellido" th:field="*{apellido}" class="form-control">
+
+        <label for="genero" class="col-form-label">Genero:</label>
+        <input type="text" id="genero" th:field="*{genero}" class="form-control">
+        <br>
+        <button type="submit" class="btn btn-primary col-2">Update</button>
+    </form>
+</div>
+</body>
+</html>
