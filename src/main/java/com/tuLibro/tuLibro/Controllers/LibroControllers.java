@@ -76,6 +76,7 @@ public class LibroControllers {
                 libroExistente.getPrecio()
         );
         model.addAttribute("libro",libro);
+        model.addAttribute("autores",autorService.getAllAutores());
         return "update_libro";
     }
     @PostMapping("/libroUpdate")

@@ -9,7 +9,7 @@
 <div class="container-lg">
     <h1>Registrarse</h1>
     <hr>
-    <form class="w-50" th:action="@{/registerUser}"  method="post" th:object="${userdto}">
+    <form class="w-50" th:action="@{/registerUser}"  method="post" th:object="${userdto}" autocomplete="off">
             <label for="username">Usuario:</label>
             <input type="text" id="username" name="username" th:field="*{username}" class="form-control" required>
 

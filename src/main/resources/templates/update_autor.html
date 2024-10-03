@@ -9,7 +9,7 @@
 <div class="container-lg">
     <h1>Actualizar autor</h1>
     <hr>
-    <form class="w-50" th:action="@{/updateAutor}" th:object="${autor}" method="post">
+    <form class="w-50" th:action="@{/updateAutor}" th:object="${autor}" method="post" autocomplete="off">
         <input type="hidden" th:field="*{id}">
         <label for="nombre" class="col-form-label">Nombre:</label>
         <input type="text" id="nombre" th:field="*{nombre}" class="form-control">

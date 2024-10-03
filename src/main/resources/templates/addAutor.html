@@ -9,7 +9,7 @@
 <div class="container">
 <h1>Registrar autor</h1>
     <hr>
-<form  th:action="@{/addAutor}"  method="post" th:object="${Autor}">
+<form  th:action="@{/addAutor}"  method="post" th:object="${Autor}" autocomplete="off">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" th:field="*{nombre}" class="form-control mb-4 col-4" required>
 

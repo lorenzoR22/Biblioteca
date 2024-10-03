@@ -9,7 +9,7 @@
 <div class="container-lg">
     <h1>Añadir libro</h1>
     <hr>
-    <form class="w-50" th:action="@{/addLibro}" th:object="${newLibro}" method="post">
+    <form class="w-50" th:action="@{/addLibro}" th:object="${newLibro}" method="post" autocomplete="off">
 
         <label for="nombre" class="col-form-label">Nombre de libro:</label>
         <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required>
