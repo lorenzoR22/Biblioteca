@@ -66,7 +66,7 @@ public class LibroService {
         return libroRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("No se encontro el ID:"+id));
     }
-    public void actualizarLibro(LibroDTO libro) throws LibroRepetidoException, AutorNoEncontradoException {
+    public void actualizarLibro(LibroDTO libro) throws  AutorNoEncontradoException {
         Autor autor=autorRepository.findById(libro.getAutor().getId())
                 .orElseThrow(()->new AutorNoEncontradoException("no se encontro el autor"));
 
@@ -77,10 +77,6 @@ public class LibroService {
         libroExistente.setNombre(libro.getNombre());
         libroExistente.setPrecio(libro.getPrecio());
 
-        boolean libroExists = libroRepository.existsByNombreAndAutor(libro.getNombre(),libroExistente.getAutor());
-        if (libroExists){
-            throw new LibroRepetidoException("este libro ya esta registrado");
-        }
         libroRepository.save(libroExistente);
     }
 

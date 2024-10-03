@@ -15,8 +15,6 @@
         <label for="nombre" class="col-form-label">Nombre:</label>
         <input type="text" id="nombre" th:field="*{nombre}" class="form-control">
 
-        <input type="hidden" th:field="*{autor.id}">
-
         <label for="autor" class="col-form-label">Autor:</label>
         <select id="autor" th:field="*{autor.id}" class="form-control" required>
             <option value="" th:selected="*{autor.id} == null">Selecciona un autor</option>
