@@ -24,7 +24,7 @@ public class UserService {
     private RoleRepository roleRepository;
 
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public UserEntity saveUser(UserDTO userDTO) throws UserAlreadyExistsException {
         if(userRepository.existsByUsername(userDTO.getUsername())){
