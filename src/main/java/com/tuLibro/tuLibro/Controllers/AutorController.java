@@ -42,12 +42,14 @@ public class AutorController {
         autorService.saveAutor(autorDTO);
         return "redirect:/autores";
     }
+
     @GetMapping("/showFormUpdateAutor/{id}")
     public String showFormUpdate(@PathVariable("id") Long id, Model model) throws AutorNoEncontradoException {
         AutorDTO savedAutor=autorService.getLibroById(id);
         model.addAttribute("autor",savedAutor);
         return "update_autor";
     }
+
     @PostMapping("/updateAutor")
     public String actualizarAutorLibro(@Valid AutorDTO autor) throws AutorRepetidoException {
         autorService.actualizarAutor(autor);

@@ -43,24 +43,19 @@ public class UserService {
         userEntity2.setPassword(passwordEncoder.encode(userEntity2.getPassword()));
         return userRepository.save(userEntity2);
     }
-    public UserEntity findUserLog(UserDTO userDTO){
-        UserEntity userFind= userRepository.findByUsername(userDTO.getUsername())
-                .orElseThrow(()->new UsernameNotFoundException("user "+userDTO.getUsername()+" not found"));
-        if(!passwordEncoder.matches(userDTO.getPassword(),userFind.getPassword())){
-            throw new UsernameNotFoundException("Contraseña incorrecta");
-        }
-        return userFind;
-    }
+
     public void deleteUser(Long id){
         userRepository.findById(id)
                 .orElseThrow(()->new UsernameNotFoundException("No se encontro el id"));
         userRepository.deleteById(id);
     }
+
     public UserEntity getUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(
                 ()->new UsernameNotFoundException("no se encontro el usuario")
         );
     }
+
     public void deleteAllUsers(){
         userRepository.deleteAll();
     }

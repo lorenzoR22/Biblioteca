@@ -62,6 +62,7 @@ public class LibroControllers {
         }
         return"redirect:/libros";
     }
+
     @GetMapping("/showFormUpdateLibro/{id}")
     public String showFormUpdate(@PathVariable ("id")Long id,Model model){
         Libro libroExistente=libroService.getLibroById(id);
@@ -79,16 +80,19 @@ public class LibroControllers {
         model.addAttribute("autores",autorService.getAllAutores());
         return "update_libro";
     }
+
     @PostMapping("/libroUpdate")
     public String actualizarLibro(@ModelAttribute("libro") @Valid LibroDTO libro) throws LibroRepetidoException, AutorNoEncontradoException {
         libroService.actualizarLibro(libro);
         return "redirect:/libros";
     }
+
     @GetMapping("/delete/{id}")
     public String borrarLibro(@PathVariable("id") Long id){
         libroService.borrarLibro(id);
         return "redirect:/libros";
     }
+
     @GetMapping("/delete/libro/{id}")
     public String borrarLibroDesdeAutor(@PathVariable("id") Long id){
         libroService.borrarLibro(id);

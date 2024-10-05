@@ -62,10 +62,12 @@ public class LibroService {
                 ))
                 .collect(Collectors.toList());
     }
+
     public Libro getLibroById(Long id){
         return libroRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("No se encontro el ID:"+id));
     }
+
     public void actualizarLibro(LibroDTO libro) throws  AutorNoEncontradoException {
         Autor autor=autorRepository.findById(libro.getAutor().getId())
                 .orElseThrow(()->new AutorNoEncontradoException("no se encontro el autor"));

@@ -36,6 +36,7 @@ public class UserController {
         model.addAttribute("userdto", new UserDTO());
         return "register";
     }
+
     @PostMapping("/registerUser")
     public String createUser(@ModelAttribute("userdto") @Valid UserDTO user) throws UserAlreadyExistsException {
         userService.saveUser(user);
@@ -88,6 +89,7 @@ public class UserController {
         userService.deleteUser(Long.parseLong(id));
         return "el id "+id+" fue eliminado";
     }
+
     @DeleteMapping("deleteAllUsers")
     public String deleteAllUsers(){
         userService.deleteAllUsers();
