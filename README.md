@@ -1,6 +1,6 @@
 # Sistema de Gestión de Libros y Autores con Seguridad y Autenticación JWT
 
-Este sistema de gestión permite administrar libros y autores, ofreciendo funcionalidades como autenticación y autorización mediante JWT, manejo de roles con Spring Security, y una interfaz web utilizando Thymeleaf. El backend está construido con Spring Boot y se conecta a una base de datos PostgreSQL.
+Este sistema de gestión permite administrar libros y autores, ofreciendo funcionalidades como autenticación y autorización mediante JWT, manejo de roles con Spring Security, y una interfaz web basica utilizando Thymeleaf. El backend está construido con Spring Boot y se conecta a una base de datos PostgreSQL.
 
 ## Tecnologías Utilizadas
 - Spring Boot
