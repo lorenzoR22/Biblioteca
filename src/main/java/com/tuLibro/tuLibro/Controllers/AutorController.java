@@ -6,17 +6,18 @@ import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorNoEncontradoException
 import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorRepetidoException;
 import com.tuLibro.tuLibro.Services.AutorService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class AutorController {
-    @Autowired
-    private AutorService autorService;
+
+    private final AutorService autorService;
 
     @GetMapping("/autores")
     public String getAllAutores(Model model){
@@ -25,7 +26,7 @@ public class AutorController {
     }
 
     @GetMapping("/librosAutor/{id}")
-    public String getAllLibrosAutor(@PathVariable("id") Long id,Model model){
+    public String getAllLibrosAutor(@PathVariable("id") Long id,Model model) throws AutorNoEncontradoException {
         model.addAttribute("librosAutor",autorService.getAllLibrosAutor(id));
         return "/librosAutor";
     }

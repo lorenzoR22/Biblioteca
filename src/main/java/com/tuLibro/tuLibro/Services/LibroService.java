@@ -5,29 +5,28 @@ import com.tuLibro.tuLibro.DTOs.LibroDTO;
 import com.tuLibro.tuLibro.Entities.Autor;
 import com.tuLibro.tuLibro.Entities.Libro;
 import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorNoEncontradoException;
+import com.tuLibro.tuLibro.Exceptions.LibroExceptions.LibroNoEncontradoException;
 import com.tuLibro.tuLibro.Exceptions.LibroExceptions.LibroRepetidoException;
 import com.tuLibro.tuLibro.Repositories.AutorRepository;
 import com.tuLibro.tuLibro.Repositories.LibroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-
+@RequiredArgsConstructor
 public class LibroService {
-    @Autowired
-    private LibroRepository libroRepository;
-    @Autowired
-    private AutorRepository autorRepository;
-    @Autowired
-    private AutorService autorService;
+
+    private final LibroRepository libroRepository;
+    private final AutorRepository autorRepository;
 
     public void saveLibro(LibroDTO libro) throws LibroRepetidoException, AutorNoEncontradoException {
         Libro newLibro=new Libro();
         if (libro.getAutor().getId() != null) {
             Autor autorExistente = autorRepository.findById(libro.getAutor().getId())
-                    .orElseThrow(() -> new AutorNoEncontradoException("No se encontró el autor"));
+                    .orElseThrow(() -> new AutorNoEncontradoException(libro.getAutor().getId()));
+
             newLibro.setAutor(autorExistente);
         } else {
             Autor autorSaved =new Autor(
@@ -36,8 +35,7 @@ public class LibroService {
                     libro.getAutor().getGenero()
             );
             if (libroRepository.existsByNombreAndAutor(libro.getNombre(),autorSaved)) {
-                throw new LibroRepetidoException("El libro con el nombre " +libro.getNombre()+
-                        " y con el autor "+autorSaved.getNombre()+" ya existe.");
+                throw new LibroRepetidoException(libro.getNombre(),autorSaved.getNombre(),autorSaved.getApellido());
             }
             autorRepository.save(autorSaved);
             newLibro.setAutor(autorSaved);
@@ -49,31 +47,21 @@ public class LibroService {
 
     public List<LibroDTO>getAllLibros(){
         List<Libro>libros=libroRepository.findAll();
-        return libros.stream()
-                .map(libro->new LibroDTO(
-                        libro.getId(),
-                        libro.getNombre(),
-                        new AutorDTO(
-                                libro.getAutor().getId(),
-                                libro.getAutor().getNombre(),
-                                libro.getAutor().getApellido(),
-                                libro.getAutor().getGenero()),
-                        libro.getPrecio()
-                ))
-                .collect(Collectors.toList());
+        return LibrostoDTO(libros);
     }
 
-    public Libro getLibroById(Long id){
-        return libroRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("No se encontro el ID:"+id));
+    public LibroDTO getLibroById(Long id) throws LibroNoEncontradoException {
+         Libro libro=libroRepository.findById(id)
+                .orElseThrow(()->new LibroNoEncontradoException(id));
+         return libroToDTO(libro);
     }
 
-    public void actualizarLibro(LibroDTO libro) throws  AutorNoEncontradoException {
+    public void actualizarLibro(LibroDTO libro) throws AutorNoEncontradoException, LibroNoEncontradoException {
         Autor autor=autorRepository.findById(libro.getAutor().getId())
-                .orElseThrow(()->new AutorNoEncontradoException("no se encontro el autor"));
+                .orElseThrow(()->new AutorNoEncontradoException(libro.getAutor().getId()));
 
         Libro libroExistente=libroRepository.findById(libro.getId())
-                .orElseThrow(()->new RuntimeException("no se encontro el ID:"+libro.getId()));
+                .orElseThrow(()->new LibroNoEncontradoException(libro.getId()));
 
         libroExistente.setAutor(autor);
         libroExistente.setNombre(libro.getNombre());
@@ -82,10 +70,27 @@ public class LibroService {
         libroRepository.save(libroExistente);
     }
 
-    public String borrarLibro( Long id){
+    public void borrarLibro( Long id) throws LibroNoEncontradoException {
         Libro libroAborrar=libroRepository.findById(id).
-                orElseThrow(()->new RuntimeException("no se encontro el ID:"+id));
+                orElseThrow(()->new LibroNoEncontradoException(id));
         libroRepository.delete(libroAborrar);
-        return "El libro con el id "+id+" ha sido borrado con exito";
+    }
+
+    public List<LibroDTO> LibrostoDTO(List<Libro>libros){
+        return libros.stream()
+                .map(this::libroToDTO)
+                .collect(Collectors.toList());
+    }
+    public LibroDTO libroToDTO(Libro libro){
+        return new LibroDTO(
+                libro.getId(),
+                libro.getNombre(),
+                new AutorDTO(
+                        libro.getAutor().getId(),
+                        libro.getAutor().getNombre(),
+                        libro.getAutor().getApellido(),
+                        libro.getAutor().getGenero()),
+                libro.getPrecio()
+        );
     }
 }

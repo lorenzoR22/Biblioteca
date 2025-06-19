@@ -1,6 +1,6 @@
-package com.tuLibro.tuLibro.Security.Jwt;
+package com.tuLibro.tuLibro.Config.Jwt;
 
-import com.tuLibro.tuLibro.Security.CustomerUserDetailsService;
+import com.tuLibro.tuLibro.Config.CustomerUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

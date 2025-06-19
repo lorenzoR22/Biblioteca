@@ -1,4 +1,4 @@
-package com.tuLibro.tuLibro.Security.Jwt;
+package com.tuLibro.tuLibro.Config.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -5,28 +5,25 @@ import com.tuLibro.tuLibro.DTOs.LibroDTO;
 import com.tuLibro.tuLibro.Entities.Autor;
 import com.tuLibro.tuLibro.Entities.Libro;
 import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorNoEncontradoException;
-import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorRepetidoException;
+import com.tuLibro.tuLibro.Exceptions.LibroExceptions.LibroNoEncontradoException;
 import com.tuLibro.tuLibro.Exceptions.LibroExceptions.LibroRepetidoException;
-import com.tuLibro.tuLibro.Repositories.LibroRepository;
 import com.tuLibro.tuLibro.Services.AutorService;
 import com.tuLibro.tuLibro.Services.LibroService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @Controller
+@RequiredArgsConstructor
 public class LibroControllers {
-    
-    @Autowired
-    private LibroService libroService;
 
-    @Autowired
-    private AutorService autorService;
+    private final LibroService libroService;
+    private final AutorService autorService;
 
     @GetMapping("/libros")
     public String getAllLibros(Model model){
@@ -35,7 +32,7 @@ public class LibroControllers {
     }
 
     @GetMapping("/{id}")
-    public Libro getLibroById(@PathVariable Long id){
+    public LibroDTO getLibroById(@PathVariable Long id) throws LibroNoEncontradoException {
         return libroService.getLibroById(id);
     }
 
@@ -49,13 +46,6 @@ public class LibroControllers {
     @PostMapping("/addLibro")
     public String addLibro(@ModelAttribute("newLibro")@Valid LibroDTO libro){
         try {
-            Autor autor=autorService.getAutorById(libro.getAutor().getId());
-            libro.setAutor(new AutorDTO(
-                    autor.getId(),
-                    autor.getNombre(),
-                    autor.getApellido(),
-                    autor.getGenero()
-            ));
             libroService.saveLibro(libro);
         }catch (LibroRepetidoException | AutorNoEncontradoException e){
             return "redirect:/addLibro";
@@ -64,37 +54,27 @@ public class LibroControllers {
     }
 
     @GetMapping("/showFormUpdateLibro/{id}")
-    public String showFormUpdate(@PathVariable ("id")Long id,Model model){
-        Libro libroExistente=libroService.getLibroById(id);
-        LibroDTO libro=new LibroDTO(id,
-                libroExistente.getNombre(),
-                new AutorDTO(
-                        libroExistente.getAutor().getId(),
-                        libroExistente.getAutor().getNombre(),
-                        libroExistente.getAutor().getApellido(),
-                        libroExistente.getAutor().getGenero()
-                ),
-                libroExistente.getPrecio()
-        );
+    public String showFormUpdate(@PathVariable ("id")Long id,Model model) throws LibroNoEncontradoException {
+        LibroDTO libro=libroService.getLibroById(id);
         model.addAttribute("libro",libro);
         model.addAttribute("autores",autorService.getAllAutores());
         return "update_libro";
     }
 
     @PostMapping("/libroUpdate")
-    public String actualizarLibro(@ModelAttribute("libro") @Valid LibroDTO libro) throws LibroRepetidoException, AutorNoEncontradoException {
+    public String actualizarLibro(@ModelAttribute("libro") @Valid LibroDTO libro) throws LibroRepetidoException, AutorNoEncontradoException, LibroNoEncontradoException {
         libroService.actualizarLibro(libro);
         return "redirect:/libros";
     }
 
     @GetMapping("/delete/{id}")
-    public String borrarLibro(@PathVariable("id") Long id){
+    public String borrarLibro(@PathVariable("id") Long id) throws LibroNoEncontradoException {
         libroService.borrarLibro(id);
         return "redirect:/libros";
     }
 
     @GetMapping("/delete/libro/{id}")
-    public String borrarLibroDesdeAutor(@PathVariable("id") Long id){
+    public String borrarLibroDesdeAutor(@PathVariable("id") Long id) throws LibroNoEncontradoException {
         libroService.borrarLibro(id);
         return "redirect:/autores";
     }

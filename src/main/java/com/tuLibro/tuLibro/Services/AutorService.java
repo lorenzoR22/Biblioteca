@@ -5,47 +5,69 @@ import com.tuLibro.tuLibro.Entities.Autor;
 import com.tuLibro.tuLibro.Entities.Libro;
 import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorNoEncontradoException;
 import com.tuLibro.tuLibro.Exceptions.AutorExceptions.AutorRepetidoException;
+import com.tuLibro.tuLibro.Exceptions.LibroExceptions.LibroNoEncontradoException;
 import com.tuLibro.tuLibro.Repositories.AutorRepository;
 import com.tuLibro.tuLibro.Repositories.LibroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AutorService {
 
-    @Autowired
-    private AutorRepository autorRepository;
+    private final AutorRepository autorRepository;
+    private final LibroRepository libroRepository;
 
-    @Autowired
-    private LibroRepository libroRepository;
-
-    public Autor saveAutor(AutorDTO autorDTO)throws AutorRepetidoException{
+    public void saveAutor(AutorDTO autorDTO)throws AutorRepetidoException{
        if(autorRepository.existsByNombreAndApellido(autorDTO.getNombre(),autorDTO.getNombre())){
-           throw new AutorRepetidoException("Autor ya registrado");
+           throw new AutorRepetidoException(autorDTO.getNombre(),autorDTO.getApellido());
        }
        Autor autorNew=new Autor(autorDTO.getNombre(),
                autorDTO.getApellido(),
                autorDTO.getGenero());
-       return autorRepository.save(autorNew);
+
+       autorRepository.save(autorNew);
     }
 
     public List<AutorDTO> getAllAutores(){
         List<Autor>autores=autorRepository.findAll();
-        return autores.stream()
-                .map(autor->new AutorDTO(
-                        autor.getId(),
-                        autor.getNombre(),
-                        autor.getApellido(),
-                        autor.getGenero()
-                ))
-                .collect(Collectors.toList());
+        return autoresToDTO(autores);
     }
 
     public AutorDTO getLibroById(Long id) throws AutorNoEncontradoException {
         Autor autor= autorRepository.findById(id)
-                .orElseThrow(()->new AutorNoEncontradoException("No se encontro el autor"));
+                .orElseThrow(()->new AutorNoEncontradoException(id));
+        return autorToDTO(autor);
+    }
+
+    public Autor getAutorById(Long id) throws AutorNoEncontradoException {
+       return autorRepository.findById(id)
+               .orElseThrow(()->new AutorNoEncontradoException(id));
+    }
+
+    public List<Libro> getAllLibrosAutor(Long id) throws AutorNoEncontradoException {
+         return libroRepository.findByAutorId(id)
+                 .orElseThrow(()->new AutorNoEncontradoException(id));
+    }
+
+    public void actualizarAutor(AutorDTO autor) throws AutorRepetidoException {
+        Autor autorExistente=autorRepository.findById(autor.getId())
+                .orElseThrow(()->new AutorRepetidoException(autor.getNombre(),autor.getApellido()));
+
+        autorExistente.setApellido(autor.getApellido());
+        autorExistente.setNombre(autor.getNombre());
+        autorExistente.setGenero(autor.getGenero());
+        autorRepository.save(autorExistente);
+    }
+
+    public void borrarAutor(Long id) throws AutorNoEncontradoException {
+        Autor autorAborrar=autorRepository.findById(id).
+                orElseThrow(()->new AutorNoEncontradoException(id));
+        autorRepository.delete(autorAborrar);
+    }
+    public AutorDTO autorToDTO(Autor autor){
         return new AutorDTO(
                 autor.getId(),
                 autor.getNombre(),
@@ -54,28 +76,9 @@ public class AutorService {
         );
     }
 
-    public Autor getAutorById(Long id){
-       return autorRepository.findAutorById(id);
-    }
-
-    public List<Libro> getAllLibrosAutor(Long id){
-         return libroRepository.findByAutorId(id);
-    }
-
-    public Autor actualizarAutor(AutorDTO autor) throws AutorRepetidoException {
-        Autor autorExistente=autorRepository.findById(autor.getId())
-                .orElseThrow(()->new AutorRepetidoException("Autor no registrado."));
-
-        autorExistente.setApellido(autor.getApellido());
-        autorExistente.setNombre(autor.getNombre());
-        autorExistente.setGenero(autor.getGenero());
-        return autorRepository.save(autorExistente);
-    }
-
-    public String borrarAutor( Long id) throws AutorNoEncontradoException {
-        Autor autorAborrar=autorRepository.findById(id).
-                orElseThrow(()->new AutorNoEncontradoException("no se encontro el autor"));
-        autorRepository.delete(autorAborrar);
-        return "El autor con el id "+id+" ha sido borrado con exito";
+    public List<AutorDTO>autoresToDTO(List<Autor>autores){
+        return autores.stream()
+                .map(this::autorToDTO)
+                .collect(Collectors.toList());
     }
 }

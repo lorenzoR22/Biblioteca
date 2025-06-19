@@ -1,7 +1,7 @@
-package com.tuLibro.tuLibro.Security;
+package com.tuLibro.tuLibro.Config;
 
 import com.tuLibro.tuLibro.Entities.ERole;
-import com.tuLibro.tuLibro.Security.Jwt.JwtAuthenticationFilter;
+import com.tuLibro.tuLibro.Config.Jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

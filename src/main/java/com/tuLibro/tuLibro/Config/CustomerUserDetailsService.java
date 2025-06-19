@@ -1,4 +1,4 @@
-package com.tuLibro.tuLibro.Security;
+package com.tuLibro.tuLibro.Config;
 
 import com.tuLibro.tuLibro.Entities.UserEntity;
 import com.tuLibro.tuLibro.Repositories.UserRepository;

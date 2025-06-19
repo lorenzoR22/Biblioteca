@@ -3,6 +3,7 @@ package com.tuLibro.tuLibro.DTOs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,17 +21,9 @@ public class UserDTO {
     private String username;
     @NotBlank
     private String password;
-
     @Email
     private String email;
-
-    private Set<String> roles;
-
-    public UserDTO(String username, String password,String mail) {
-        this.username = username;
-        this.password = password;
-        this.email =mail;
-        this.roles = new HashSet<>();
-    }
+    @NotNull
+    private Set<String> roles=new HashSet<>();
 
 }
