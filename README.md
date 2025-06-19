@@ -16,6 +16,7 @@ Este sistema de gestión permite administrar libros y autores, ofreciendo funcio
 - Roles y permisos para usuarios.
 
 ## Video Demostrativo
-Puedes ver una demostración del proyecto en el siguiente enlace:  
-[Ver Video](https://www.youtube.com/watch?v=JgT-Vl5pLy0&t=14s)
+<a href="https://www.youtube.com/watch?v=JgT-Vl5pLy0&t=14s" target="_blank">
+  <img src="https://img.youtube.com/vi/JgT-Vl5pLy0/maxresdefault.jpg" width="700"/>
+</a>
 
